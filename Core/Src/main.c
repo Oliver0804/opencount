@@ -52,6 +52,7 @@ char tempString[30];
 /* USER CODE BEGIN PV */
 uint32_t count=0;
 uint32_t timecount=0;
+uint32_t buzzcount=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,6 +125,11 @@ int main(void)
   MX_RTC_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  /*
+   *
+   */
+  //count=0;
+  //KeepSet();
   ReadSet();
   count++;
   KeepSet();
@@ -146,11 +152,16 @@ int main(void)
 		  timecount++;
 	  }
 	  if(count>=(365*3)){//三年次數
-		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET);
-		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_RESET);
-	  }else{
-		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_SET);
+		  if(buzzcount>=20){//20S Sound 200ms
+			  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET);
+			  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_RESET);
+			  HAL_Delay(200);
+			  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET);
+			  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_6,GPIO_PIN_SET);
+			  buzzcount=0;
+		  }else{
+			  buzzcount++;
+		  }
 	  }
     /* USER CODE END WHILE */
 
